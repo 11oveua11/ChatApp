@@ -5,65 +5,56 @@ from PyQt5.QtCore import *
 from Msg import *
 
 
-class WgtMain(QWidget):
+class DlgMain(QDialog):
 
     def __init__(self):
         super().__init__()
         self.setWindowTitle('ChatApp!')
         self.resize(400, 400)
-        self.setWindowIcon(QIcon('chat1.png'))
-        # self.setWindowFlags(Qt.Sheet)
+        self.setWindowIcon(QIcon('icon1.png'))
 
-
-        # self.message = AdvMessage()
+        self.message = AdvMessage()
         self.msg_as_txt = ""
-        self.emoji_list = ['\U0001F600, \U0001F601, \U0001F602, \U0001F603']
-        self.emoji_list_html = ['&#128512', '&#128515', '&#128516', '&#128513;']
+
+        # self.frame_bottom = QFrame(self)
+        # self.frame_bottom.setFrameShape(QFrame.StyledPanel)
 
         self.txtBrowser = QTextBrowser(self)
         self.txtBrowser.resize(400, 300)
         self.txtBrowser.setText('')
-        # self.txtBrowser.setAlignment(Qt.AlignBottom | Qt.AlignLeft)
-
-        # self.labelHist = QLabel(self)
-        # self.labelHist.resize(400, 200)
-        # self.labelHist.setText('')
-        # self.labelHist.setAlignment(Qt.AlignBottom|Qt.AlignLeft)
+        self.txtBrowser.setAlignment(Qt.AlignBottom | Qt.AlignLeft)
 
         self.txtEdit = QTextEdit(self)
-        self.txtEdit.move(0, 300)
-        self.txtEdit.resize(360, 80)
+        # self.txtEdit.move(0, 300)
+        self.txtEdit.resize(400, 80)
         self.txtEdit.textChanged.connect(self.txtEdit_changed)
 
+        self.splitter = QSplitter(Qt.Vertical)
+        self.splitter.addWidget(self.txtBrowser)
+        self.splitter.addWidget(self.txtEdit)
+
+        self.vbox_main_layout = QVBoxLayout(self)
+        self.vbox_main_layout.addWidget(self.splitter)
+
+        self.hbox_layout = QHBoxLayout(self)
+
         self.btnSend = QPushButton(self)
-        self.btnSend.move(360, 300)
-        self.btnSend.resize(40, 40)
+        # self.btnSend.move(360, 300)
+        # self.btnSend.resize(40, 40)
         self.btnSend.clicked.connect(self.btnSend_clicked)
         self.btnSend.setIcon(QIcon('send-icon.png'))
-        self.btnSend.setIconSize(QSize(32, 32))
 
         self.btnAdditions = QPushButton(self)
-        self.btnAdditions.move(360, 340)
-        self.btnAdditions.resize(40, 40)
+        # self.btnAdditions.move(360, 340)
+        # self.btnAdditions.resize(40, 40)
         self.btnAdditions.clicked.connect(self.btnAdditions_clicked)
         self.btnAdditions.setIcon(QIcon('emoji-icon.png'))
-        self.btnAdditions.setIconSize(QSize(32, 32))
 
-        self.emojiFrame = QWidget(self)
-        self.emojiFrame.setWindowFlags(Qt.Popup)
-        self.emojiFrame.resize(200, 200)
-        for i in range(4):
-
-            pass
-            #self.emoji = QLabel(self.emojiFrame)
-            #self.emoji.setText(self.emoji_list[i])
-            #self.emoji.setObjectName('emoji'+str(i))
-        # self.emojiTextBrowser.mousePressEvent()
+        self.hbox_layout.addWidget(self.btnSend)
+        self.hbox_layout.addWidget(self.btnAdditions)
 
 
-
-
-
+        self.vbox_main_layout.addLayout(self.hbox_layout)
 
 
     def btnSend_clicked(self):
@@ -72,15 +63,11 @@ class WgtMain(QWidget):
         self.txtBrowser.append(emoji.emojize(self.msg_as_txt))
         self.txtEdit.clear()
         self.txtEdit.setFocus()
-        self.msg_as_txt = ""
 
     def btnAdditions_clicked(self):
-        # self.msg_as_txt = self.txtEdit.toPlainText() + ':thumbs_up:'
-        # self.txtEdit.setText(emoji.emojize(self.msg_as_txt))
-        # self.txtEdit.setFocus()
-        self.emojiFrame.show()
-        self.rect = self.geometry()
-        self.emojiFrame.move(self.rect.left()+360, self.rect.top()+340)
+        self.msg_as_txt = self.txtEdit.toPlainText() + ':thumbs_up:'
+        self.txtEdit.setText(emoji.emojize(self.msg_as_txt))
+        self.txtEdit.setFocus()
 
 
 
@@ -97,7 +84,7 @@ class WgtMain(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    dlgMain = WgtMain()
+    dlgMain = DlgMain()
     dlgMain.show()
     sys.exit(app.exec())
 
