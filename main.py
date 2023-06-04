@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from Msg import *
+import tabs
 
 
 class DlgMain(QDialog):
@@ -15,6 +16,13 @@ class DlgMain(QDialog):
 
         # self.message = AdvMessage()
         self.msg_as_txt_0 = ""
+        self.tab_list = []
+        self.msg_as_txt_list = []
+        self.txt_Browser_list = []
+        self.txt_Edit_list = []
+        self.txt_Edit_list_changed = []
+        self.vbox_tab_layout_list = []
+        self.splitter_list = []
 
         self.txt_Browser_0 = QTextBrowser(self)
         #self.txtBrowser.resize(100, 80)
@@ -26,7 +34,7 @@ class DlgMain(QDialog):
         #self.txtEdit.resize(100, 50)
         self.txt_Edit_0.textChanged.connect(self.txtEdit_changed)
 
-        self.tabWidget = QTabWidget(self)
+        self.tab_Widget = QTabWidget(self)
         self.tab_0 = QWidget()
         self.vbox_tab_layout_0 = QVBoxLayout(self.tab_0)
         # self.tab_0.setStyleSheet('background-color: red')
@@ -42,8 +50,8 @@ class DlgMain(QDialog):
 
 
         self.vbox_main_layout = QVBoxLayout(self)
-        self.vbox_main_layout.addWidget(self.tabWidget)
-        self.tabWidget.addTab(self.tab_0, "Tab 0")
+        self.vbox_main_layout.addWidget(self.tab_Widget)
+        self.tab_Widget.addTab(self.tab_0, "Tab 0")
 
 
 
@@ -74,24 +82,29 @@ class DlgMain(QDialog):
 
     def add_new_tab(self):
 
-        self.msg_as_txt_0 = ""
+        self.tab_ind = len(self.tab_Widget)-1
+        self.msg_as_txt_list.append("")
 
-        self.txt_Browser_0 = QTextBrowser(self)
+        self.tab_list.append(QWidget())
+
+        self.txt_Browser_list.append(QTextBrowser(self))
         # self.txtBrowser.resize(400, 300)
-        self.txt_Browser_0.setText('')
-        self.txt_Browser_0.setAlignment(Qt.AlignBottom | Qt.AlignLeft)
+        self.txt_Browser_list[self.tab_ind].setText('')
+        self.txt_Browser_list[self.tab_ind].setAlignment(Qt.AlignBottom | Qt.AlignLeft)
 
-        self.txt_Edit_0 = QTextEdit(self)
+        self.txt_Edit_list.append(QTextEdit(self))
         # self.txtEdit.move(0, 300)
         # self.txtEdit.resize(400, 80)
-        self.txt_Edit_0.textChanged.connect(self.txtEdit_changed)
+        self.txt_Edit_list[self.tab_ind].textChanged.connect(self.txtEdit_changed)
 
-        self.splitter_0 = QSplitter(Qt.Vertical)
-        self.splitter_0.addWidget(self.txt_Browser_0)
-        self.splitter_0.addWidget(self.txt_Edit_0)
+        self.splitter_list.append(QSplitter(Qt.Vertical))
+        self.splitter_list[self.tab_ind].addWidget(self.txt_Browser_list[self.tab_ind])
+        self.splitter_list[self.tab_ind].addWidget(self.txt_Edit_list[self.tab_ind])
 
-        self.vbox_main_layout = QVBoxLayout(self)
-        self.vbox_main_layout.addWidget(self.splitter_0)
+        self.vbox_tab_layout_list.append(QVBoxLayout(self.tab_list[self.tab_ind]))
+        self.vbox_tab_layout_list[self.tab_ind].addWidget(self.splitter_list[self.tab_ind])
+
+        self.tab_Widget.addTab(self.tab_list[self.tab_ind], "Chat " + str(self.tab_ind))
 
     def btnSend_clicked(self):
         # self.hist_text = self.hist_text + '\n\n' + self.txtEdit.toPlainText()
