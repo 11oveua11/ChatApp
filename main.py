@@ -44,18 +44,21 @@ class DlgMain(QDialog):
         self.splitter_0.setChildrenCollapsible(False)
         self.splitter_0.setSizes([300, ])
         self.vbox_tab_layout_0.addWidget(self.splitter_0)
+        self.vbox_tab_layout_0.setContentsMargins(0, 0, 0, 0)
         # self.tab_0.resize(self, [350, 300])
 
         # self.splitter_0.setSizes([240, 100])
 
 
         self.vbox_main_layout = QVBoxLayout(self)
+        self.vbox_main_layout.setContentsMargins(0, 0, 0, 0)
         self.vbox_main_layout.addWidget(self.tab_Widget)
         self.tab_Widget.addTab(self.tab_0, "Tab 0")
 
 
 
         self.hbox_layout = QHBoxLayout(self)
+        self.hbox_layout.setContentsMargins(0, 0, 0, 0)
 
         self.btnSend = QPushButton(self)
         # self.btnSend.move(360, 300)
