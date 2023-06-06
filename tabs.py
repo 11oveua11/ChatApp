@@ -4,17 +4,19 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from Msg import *
 
-class Tabs(QWidget):
+class Tab(QWidget):
     def __init__(self):
         super().__init__()
         self.msg_as_txt = ""
         self.vbox_tab_layout = QVBoxLayout(self)
         self.splitter = QSplitter(Qt.Vertical)
-        self.txt_Browser = QTextBrowser(self)
-        self.txt_Edit = QTextEdit(self)
+        self.txt_browser = QTextBrowser(self)
+        self.txt_edit = QTextEdit(self)
+        self.txt_edit.textChanged.connect(self.txt_edit_changed)
 
-        self.splitter.addWidget(self.txt_Browser)
-        self.splitter.addWidget(self.txt_Edit)
+
+        self.splitter.addWidget(self.txt_browser)
+        self.splitter.addWidget(self.txt_edit)
         self.vbox_tab_layout.addWidget(self.splitter)
 
         # self.txtBrowser.resize(100, 80)
@@ -28,3 +30,9 @@ class Tabs(QWidget):
         self.splitter.setChildrenCollapsible(False)
         self.splitter.setSizes([300, ])
         self.vbox_tab_layout.setContentsMargins(0, 0, 0, 0)
+
+    def txt_edit_changed(self):
+        self.msg_as_txt = self.txt_edit.toPlainText()
+        cursor = self.txt_edit.textCursor()
+        cursor.movePosition(QTextCursor.End)
+        self.txt_edit.setTextCursor(cursor)

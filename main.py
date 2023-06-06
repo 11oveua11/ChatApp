@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from Msg import *
-import tabs
+from tabs import *
 
 
 class DlgMain(QDialog):
@@ -16,6 +16,8 @@ class DlgMain(QDialog):
 
         # self.message = AdvMessage()
         self.msg_as_txt_0 = ""
+        self.tab_widget = QTabWidget(self)
+        self.cur_tab = 0 # Index of active tab widget
         self.tab_list = []
         # self.msg_as_txt_list = []
         # self.txt_Browser_list = []
@@ -24,27 +26,29 @@ class DlgMain(QDialog):
         # self.vbox_tab_layout_list = []
         # self.splitter_list = []
 
-        self.txt_Browser_0 = QTextBrowser(self)
-        #self.txtBrowser.resize(100, 80)
-        self.txt_Browser_0.setText('')
+        # self.txt_Browser_0 = QTextBrowser(self)
+        # self.txtBrowser.resize(100, 80)
+        # self.txt_Browser_0.setText('')
         # self.txtBrowser.setAlignment(Qt.AlignBottom | Qt.AlignLeft)
 
-        self.txt_Edit_0 = QTextEdit(self)
+        # self.txt_Edit_0 = QTextEdit(self)
         # self.txtEdit.move(0, 300)
-        #self.txtEdit.resize(100, 50)
-        self.txt_Edit_0.textChanged.connect(self.txtEdit_changed)
+        # self.txtEdit.resize(100, 50)
+        # self.txt_Edit_0.textChanged.connect(self.txtEdit_changed)
 
-        self.tab_widget = QTabWidget(self)
-        self.tab_0 = QWidget()
-        self.vbox_tab_layout_0 = QVBoxLayout(self.tab_0)
+        self.tab_list.append(Tab())
+        self.tab_widget.currentChanged.connect(self.tab_widget_changed)
+        self.tab_widget.addTab(self.tab_list[0], "Tab 0")
+        #self.tab_0 = QWidget()
+        #self.vbox_tab_layout_0 = QVBoxLayout(self.tab_0)
         # self.tab_0.setStyleSheet('background-color: red')
-        self.splitter_0 = QSplitter(Qt.Vertical)
-        self.splitter_0.addWidget(self.txt_Browser_0)
-        self.splitter_0.addWidget(self.txt_Edit_0)
-        self.splitter_0.setChildrenCollapsible(False)
-        self.splitter_0.setSizes([300, ])
-        self.vbox_tab_layout_0.addWidget(self.splitter_0)
-        self.vbox_tab_layout_0.setContentsMargins(0, 0, 0, 0)
+        #self.splitter_0 = QSplitter(Qt.Vertical)
+        #self.splitter_0.addWidget(self.txt_Browser_0)
+        #self.splitter_0.addWidget(self.txt_Edit_0)
+        #self.splitter_0.setChildrenCollapsible(False)
+        #self.splitter_0.setSizes([300, ])
+        #self.vbox_tab_layout_0.addWidget(self.splitter_0)
+        #self.vbox_tab_layout_0.setContentsMargins(0, 0, 0, 0)
         # self.tab_0.resize(self, [350, 300])
 
         # self.splitter_0.setSizes([240, 100])
@@ -53,7 +57,7 @@ class DlgMain(QDialog):
         self.vbox_main_layout = QVBoxLayout(self)
         self.vbox_main_layout.setContentsMargins(0, 0, 0, 0)
         self.vbox_main_layout.addWidget(self.tab_widget)
-        self.tab_widget.addTab(self.tab_0, "Tab 0")
+        #self.tab_widget.addTab(self.tab_0, "Tab 0")
 
 
 
@@ -85,8 +89,10 @@ class DlgMain(QDialog):
 
     def add_new_tab(self):
 
-        # self.tab_list.append(tabs.Tabs())
-        self.tab_widget.addTab(tabs.Tabs(), "Tab " + str(len(self.tab_widget)))
+        self.tab_list.append(Tab())
+        self.tab_widget.addTab(self.tab_list[-1], "Tab " + str(len(self.tab_list) - 1))
+        # self.txt_Browser_0.append(str(self.tab_widget.count()))
+        # self.txt_Browser_0.append(str(self.tab_widget.currentIndex()))
 
 
         # self.tab_ind = len(self.tab_Widget)-1
@@ -114,27 +120,25 @@ class DlgMain(QDialog):
         # self.tab_Widget.addTab(self.tab_list[self.tab_ind], "Chat " + str(self.tab_ind))
 
     def btnSend_clicked(self):
+        pass
         # self.hist_text = self.hist_text + '\n\n' + self.txtEdit.toPlainText()
-
-        self.txt_Browser_0.append(emoji.emojize(self.msg_as_txt_0))
-        self.txt_Edit_0.clear()
-        self.txt_Edit_0.setFocus()
+        self.tab_list[self.cur_tab].txt_browser.append(emoji.emojize(self.tab_list[self.cur_tab].msg_as_txt))
+        self.tab_list[self.cur_tab].txt_edit.clear()
+        self.tab_list[self.cur_tab].txt_edit.setFocus()
 
     def btnAdditions_clicked(self):
-        self.msg_as_txt_0 = self.txt_Edit_0.toPlainText() + ':thumbs_up:'
-        self.txt_Edit_0.setText(emoji.emojize(self.msg_as_txt_0))
-        self.txt_Edit_0.setFocus()
+
+        self.tab_list[self.cur_tab].msg_as_txt = self.tab_list[self.cur_tab].txt_edit.toPlainText() + ':thumbs_up:'
+        self.tab_list[self.cur_tab].txt_edit.setText(emoji.emojize(self.tab_list[self.cur_tab].msg_as_txt))
+        self.tab_list[self.cur_tab].txt_edit.setFocus()
 
 
 
     def send_message (self, msg_param):
         pass
 
-    def txtEdit_changed(self):
-        self.msg_as_txt_0 = self.txt_Edit_0.toPlainText()
-        cursor = self.txt_Edit_0.textCursor()
-        cursor.movePosition(QTextCursor.End)
-        self.txt_Edit_0.setTextCursor(cursor)
+    def tab_widget_changed(self):
+        self.cur_tab = self.tab_widget.currentIndex()
 
 
 
