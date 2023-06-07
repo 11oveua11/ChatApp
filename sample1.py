@@ -1,28 +1,45 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 import sys
-from PyQt5.QtWidgets import QWidget, QLabel, QApplication
+from PyQt5.QtWidgets import QWidget, QListWidget, QListWidgetItem, QLabel, QPushButton, QApplication
 
 
-class Window(QWidget):
+class exampleWidget(QWidget):
     def __init__(self):
         super().__init__()
+
         self.initUI()
 
     def initUI(self):
-        lb1 = QLabel('Добро пожаловать', self)
-        lb1.move(15, 10)
-        lb2 = QLabel('Учиться', self)
-        lb2.move(35, 40)
-        lb3 = QLabel('PyQt 5', self)
-        lb3.move(55, 70)
-        self.setGeometry(300, 300, 250, 150)
-        self.setWindowTitle('PyQt  Абсолютное позиционирование в 5 ')
+        listWidget = QListWidget(self)
+        listWidget.itemDoubleClicked.connect(self.buildExamplePopup)
+
+        names = ["Jack", "Chris", "Joey", "Kim", "Duncan"]
+
+        for n in names:
+            QListWidgetItem(n, listWidget)
+
+        self.setGeometry(100, 100, 100, 100)
         self.show()
 
+    @staticmethod
+    def buildExamplePopup(self, item):
+        name = item.text()
+        self.exPopup = examplePopup(name)
+        self.exPopup.setGeometry(100, 200, 100, 100)
+        self.exPopup.show()
 
-if __name__ == '__main__':
+
+class examplePopup(QWidget):
+    def __init__(self, name):
+        super().__init__()
+
+        self.name = name
+
+        self.initUI()
+
+    def initUI(self):
+        lblName = QLabel(self.name, self)
+
+if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = Window()
+    ex = exampleWidget()
     sys.exit(app.exec_())

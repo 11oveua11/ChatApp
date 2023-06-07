@@ -12,76 +12,52 @@ class DlgMain(QDialog):
         super().__init__()
         self.setWindowTitle('ChatApp!')
         self.resize(400, 400)
+        # self.move(100, 100)
         self.setWindowIcon(QIcon('icon1.png'))
 
         # self.message = AdvMessage()
         self.msg_as_txt_0 = ""
         self.tab_widget = QTabWidget(self)
-        self.cur_tab = 0 # Index of active tab widget
-        self.tab_list = []
-        # self.msg_as_txt_list = []
-        # self.txt_Browser_list = []
-        # self.txt_Edit_list = []
-        # self.txt_Edit_list_changed = []
-        # self.vbox_tab_layout_list = []
-        # self.splitter_list = []
+        self.cur_tab = 0                    # Index of active tab widget
+        self.tab_list = []                  # List of tabs(Qwidget) for tab_widget(QTabWidget)
 
-        # self.txt_Browser_0 = QTextBrowser(self)
-        # self.txtBrowser.resize(100, 80)
-        # self.txt_Browser_0.setText('')
-        # self.txtBrowser.setAlignment(Qt.AlignBottom | Qt.AlignLeft)
-
-        # self.txt_Edit_0 = QTextEdit(self)
-        # self.txtEdit.move(0, 300)
-        # self.txtEdit.resize(100, 50)
-        # self.txt_Edit_0.textChanged.connect(self.txtEdit_changed)
 
         self.tab_list.append(Tab())
         self.tab_widget.currentChanged.connect(self.tab_widget_changed)
         self.tab_widget.addTab(self.tab_list[0], "Tab 0")
-        #self.tab_0 = QWidget()
-        #self.vbox_tab_layout_0 = QVBoxLayout(self.tab_0)
-        # self.tab_0.setStyleSheet('background-color: red')
-        #self.splitter_0 = QSplitter(Qt.Vertical)
-        #self.splitter_0.addWidget(self.txt_Browser_0)
-        #self.splitter_0.addWidget(self.txt_Edit_0)
-        #self.splitter_0.setChildrenCollapsible(False)
-        #self.splitter_0.setSizes([300, ])
-        #self.vbox_tab_layout_0.addWidget(self.splitter_0)
-        #self.vbox_tab_layout_0.setContentsMargins(0, 0, 0, 0)
-        # self.tab_0.resize(self, [350, 300])
-
-        # self.splitter_0.setSizes([240, 100])
-
 
         self.vbox_main_layout = QVBoxLayout(self)
         self.vbox_main_layout.setContentsMargins(0, 0, 0, 0)
         self.vbox_main_layout.addWidget(self.tab_widget)
-        #self.tab_widget.addTab(self.tab_0, "Tab 0")
-
 
 
         self.hbox_layout = QHBoxLayout(self)
         self.hbox_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.btnSend = QPushButton(self)
+        self.btn_send = QPushButton(self)
         # self.btnSend.move(360, 300)
         # self.btnSend.resize(40, 40)
-        self.btnSend.clicked.connect(self.btnSend_clicked)
-        self.btnSend.setIcon(QIcon('send-icon.png'))
+        self.btn_send.clicked.connect(self.btnSend_clicked)
+        self.btn_send.setIcon(QIcon('send-icon.png'))
 
-        self.btnAdditions = QPushButton(self)
+        self.btn_additions = QPushButton(self)
         # self.btnAdditions.move(360, 340)
         # self.btnAdditions.resize(40, 40)
-        self.btnAdditions.clicked.connect(self.btnAdditions_clicked)
-        self.btnAdditions.setIcon(QIcon('emoji-icon.png'))
+        self.btn_additions.clicked.connect(self.btnAdditions_clicked)
+        self.btn_additions.setIcon(QIcon('emoji-icon.png'))
 
-        self.btnTemp = QPushButton(self)
-        self.btnTemp.clicked.connect(self.add_new_tab)
+        self.emoji_qwidget = QWidget(self)
+        self.emoji_qwidget.setWindowFlags(Qt.Popup)
+        self.emoji_qwidget.resize(200, 200)
 
-        self.hbox_layout.addWidget(self.btnSend)
-        self.hbox_layout.addWidget(self.btnAdditions)
-        self.hbox_layout.addWidget(self.btnTemp)
+        # emoji_txt_browser.setHidden(True)
+
+        self.btn_temp = QPushButton("add new tab", self)
+        self.btn_temp.clicked.connect(self.add_new_tab)
+
+        self.hbox_layout.addWidget(self.btn_send)
+        self.hbox_layout.addWidget(self.btn_additions)
+        self.hbox_layout.addWidget(self.btn_temp)
 
         self.vbox_main_layout.addLayout(self.hbox_layout)
 
@@ -91,46 +67,29 @@ class DlgMain(QDialog):
 
         self.tab_list.append(Tab())
         self.tab_widget.addTab(self.tab_list[-1], "Tab " + str(len(self.tab_list) - 1))
-        # self.txt_Browser_0.append(str(self.tab_widget.count()))
-        # self.txt_Browser_0.append(str(self.tab_widget.currentIndex()))
 
-
-        # self.tab_ind = len(self.tab_Widget)-1
-        # self.msg_as_txt_list.append("")
-        #
-        # self.tab_list.append(QWidget())
-        #
-        # self.txt_Browser_list.append(QTextBrowser(self))
-        # # self.txtBrowser.resize(400, 300)
-        # self.txt_Browser_list[self.tab_ind].setText('')
-        # self.txt_Browser_list[self.tab_ind].setAlignment(Qt.AlignBottom | Qt.AlignLeft)
-        #
-        # self.txt_Edit_list.append(QTextEdit(self))
-        # # self.txtEdit.move(0, 300)
-        # # self.txtEdit.resize(400, 80)
-        # self.txt_Edit_list[self.tab_ind].textChanged.connect(self.txtEdit_changed)
-        #
-        # self.splitter_list.append(QSplitter(Qt.Vertical))
-        # self.splitter_list[self.tab_ind].addWidget(self.txt_Browser_list[self.tab_ind])
-        # self.splitter_list[self.tab_ind].addWidget(self.txt_Edit_list[self.tab_ind])
-        #
-        # self.vbox_tab_layout_list.append(QVBoxLayout(self.tab_list[self.tab_ind]))
-        # self.vbox_tab_layout_list[self.tab_ind].addWidget(self.splitter_list[self.tab_ind])
-        #
-        # self.tab_Widget.addTab(self.tab_list[self.tab_ind], "Chat " + str(self.tab_ind))
 
     def btnSend_clicked(self):
-        pass
         # self.hist_text = self.hist_text + '\n\n' + self.txtEdit.toPlainText()
         self.tab_list[self.cur_tab].txt_browser.append(emoji.emojize(self.tab_list[self.cur_tab].msg_as_txt))
         self.tab_list[self.cur_tab].txt_edit.clear()
         self.tab_list[self.cur_tab].txt_edit.setFocus()
 
     def btnAdditions_clicked(self):
+        pass
+        print(self.pos())
+        print(self.btn_additions.pos())
+        self.emoji_qwidget.move(self.btn_additions.pos() + self.pos() + QPoint(0, 30))
+        self.emoji_txt_browser = QTextBrowser(self.emoji_qwidget)
+        self.emoji_txt_browser.resize(200, 200)
+        print(self.emoji_qwidget.pos())
+        self.emoji_qwidget.show()
 
-        self.tab_list[self.cur_tab].msg_as_txt = self.tab_list[self.cur_tab].txt_edit.toPlainText() + ':thumbs_up:'
-        self.tab_list[self.cur_tab].txt_edit.setText(emoji.emojize(self.tab_list[self.cur_tab].msg_as_txt))
-        self.tab_list[self.cur_tab].txt_edit.setFocus()
+
+
+        # self.tab_list[self.cur_tab].msg_as_txt = self.tab_list[self.cur_tab].txt_edit.toPlainText() + ':thumbs_up:'
+        # self.tab_list[self.cur_tab].txt_edit.setText(emoji.emojize(self.tab_list[self.cur_tab].msg_as_txt))
+        # self.tab_list[self.cur_tab].txt_edit.setFocus()
 
 
 
@@ -139,6 +98,15 @@ class DlgMain(QDialog):
 
     def tab_widget_changed(self):
         self.cur_tab = self.tab_widget.currentIndex()
+
+    def emoji_to_html(self, emoji_list):
+        main_txt = """<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+"""
+        for em in emoji_list:
+            main_txt = main_txt + """<a href="http://foo>Bar</a>""" + """</a>"""
 
 
 
