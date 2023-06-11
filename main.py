@@ -20,7 +20,9 @@ class DlgMain(QDialog):
         self.tab_widget = QTabWidget(self)
         self.cur_tab = 0                    # Index of active tab widget
         self.tab_list = []                  # List of tabs(Qwidget) for tab_widget(QTabWidget)
-        self.emoji_list = ["&#128512;", "&#128513;", "&#128514;", "&#128515;"]
+        self.emoji_list = []
+        for i in range(128512, 128592):
+            self.emoji_list.append(chr(i))
 
         self.tab_list.append(Tab())
         self.tab_widget.currentChanged.connect(self.tab_widget_changed)
@@ -48,17 +50,17 @@ class DlgMain(QDialog):
 
         self.emoji_qwidget = QWidget(self)
         self.emoji_qwidget.setWindowFlags(Qt.Popup)
-        self.emoji_qwidget.resize(200, 200)
+        self.emoji_qwidget.resize(242, 292)
 
         self.emoji_txt_browser = QTextBrowser(self.emoji_qwidget)
-        self.emoji_txt_browser.resize(200, 200)
-        self.emoji_txt_browser.setHtml(self.emoji_to_html(self.emoji_list))
+        self.emoji_txt_browser.resize(242, 292)
+        self.emoji_txt_browser.setText(self.emoji_to_html(self.emoji_list))
         self.emoji_txt_browser.setOpenLinks(False)
         self.emoji_txt_browser.anchorClicked.connect(self.emoji_link_clicked)
 
         # emoji_txt_browser.setHidden(True)
 
-        self.btn_temp = QPushButton("add new tab", self)
+        self.btn_temp = QPushButton("новый чат", self)
         self.btn_temp.clicked.connect(self.add_new_tab)
 
         self.hbox_layout.addWidget(self.btn_send)
@@ -83,15 +85,17 @@ class DlgMain(QDialog):
 
     def btnAdditions_clicked(self):
 
-        print(self.pos())
-        print(self.btn_additions.pos())
+        # print(self.pos())
+        # print(self.btn_additions.pos())
         self.emoji_qwidget.move(self.btn_additions.pos() + self.pos() + QPoint(0, 30))
-        print(self.emoji_qwidget.pos())
+        # print(self.emoji_qwidget.pos())
         self.emoji_qwidget.show()
 
-    def emoji_link_clicked(self, url):
-        print(url)
-        self.tab_list[self.cur_tab].msg_as_txt = self.tab_list[self.cur_tab].txt_edit.toPlainText() + ':thumbs_up:'
+    def emoji_link_clicked(self, qurl):
+
+        # print(int(qurl.toString()))
+        # print(emoji.emojize("".join(self.emoji_list)))
+        self.tab_list[self.cur_tab].msg_as_txt = self.tab_list[self.cur_tab].txt_edit.toPlainText() + self.emoji_list[int(qurl.toString())]
         self.tab_list[self.cur_tab].txt_edit.setText(emoji.emojize(self.tab_list[self.cur_tab].msg_as_txt))
         self.tab_list[self.cur_tab].txt_edit.setFocus()
 
@@ -110,12 +114,12 @@ class DlgMain(QDialog):
 # </style></head><body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
 # """
         main_txt = ''
-        a1 = """<a href="""
-        a2 = """>"""
+        a1 = """<a href='"""
+        a2 = """' style='text-decoration: none' >"""
         a3 = """</a>"""
         for em in emoji_list:
             main_txt = main_txt + (a1 + str(emoji_list.index(em)) + a2 + em + a3)
-        return main_txt
+        return '''<body style="font-size: 16pt;">''' + main_txt + '''</body>'''
 
 
 
