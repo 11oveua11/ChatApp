@@ -4,6 +4,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from Msg import *
 from tabs import *
+import client
 
 
 class DlgMain(QDialog):
@@ -72,9 +73,11 @@ class DlgMain(QDialog):
 
 
     def add_new_tab(self):
-
-        self.tab_list.append(Tab())
-        self.tab_widget.addTab(self.tab_list[-1], "Tab " + str(len(self.tab_list) - 1))
+        clnt = client.Client()
+        self.tab_list[self.cur_tab].txt_browser.append(clnt.get_request_data())
+        # add_new_tab
+        # self.tab_list.append(Tab())
+        # self.tab_widget.addTab(self.tab_list[-1], "Tab " + str(len(self.tab_list) - 1))
 
 
     def btnSend_clicked(self):
