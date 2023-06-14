@@ -19,7 +19,7 @@ class DlgMain(QDialog):
         super().__init__()
         self.setWindowTitle('ChatApp!')
         self.resize(400, 400)
-        self.setWindowIcon(QIcon('icon2.png'))
+        self.setWindowIcon(QIcon('_additions/icon2.png'))
 
         self.vbox_main = QVBoxLayout()
         self.splitter = QSplitter(Qt.Vertical)
@@ -43,7 +43,7 @@ class DlgMain(QDialog):
         self.btnSend.move(360, 300)
         self.btnSend.resize(40, 40)
         self.btnSend.clicked.connect(self.btnSend_clicked)
-        self.btnSend.setIcon(QIcon('Icon5.png'))
+        self.btnSend.setIcon(QIcon('_additions/Icon5.png'))
 
         self.btnAdditions = QPushButton(self)
         self.btnAdditions.move(360, 340)
