@@ -5,7 +5,8 @@ from PyQt5.QtCore import *
 from Msg import *
 from tabs import *
 import client
-
+import socket
+from threading import Thread
 
 class DlgMain(QDialog):
 
@@ -62,7 +63,7 @@ class DlgMain(QDialog):
         # emoji_txt_browser.setHidden(True)
 
         self.btn_temp = QPushButton("новый чат", self)
-        self.btn_temp.clicked.connect(self.add_new_tab)
+        self.btn_temp.clicked.connect(self.btn_temp_method)
 
         self.hbox_layout.addWidget(self.btn_send)
         self.hbox_layout.addWidget(self.btn_additions)
@@ -72,12 +73,25 @@ class DlgMain(QDialog):
 
 
 
-    def add_new_tab(self):
-        clnt = client.Client()
-        self.tab_list[self.cur_tab].txt_browser.append(clnt.get_request_data())
+    def btn_temp_method(self):
+        tr1 = Thread(target=self.client_server)
+        tr1.start()
+
+
+
+        # self.tab_list[self.cur_tab].txt_browser.append(self.my_client.get_request_data())
         # add_new_tab
         # self.tab_list.append(Tab())
         # self.tab_widget.addTab(self.tab_list[-1], "Tab " + str(len(self.tab_list) - 1))
+
+    def client_server(self):
+        self.s_clnt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s_clnt.connect(('127.0.0.1', 1234))
+        msg = True
+        while True and msg!='':
+            self.s_clnt.send(bytes('main_data', 'utf-8'))
+            msg = self.s_clnt.recv(1024)
+            print(msg.decode('utf-8'))
 
 
     def btnSend_clicked(self):
