@@ -87,10 +87,12 @@ class DlgMain(QDialog):
     def client_server(self):
         self.s_clnt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s_clnt.connect(('127.0.0.1', 1234))
+        self.s_clnt.send(bytes('new_user Sam qwerty321 1', 'utf-8'))
         msg = True
         while True and msg!='':
-            self.s_clnt.send(bytes('main_data', 'utf-8'))
             msg = self.s_clnt.recv(1024)
+            if not msg:
+                break
             print(msg.decode('utf-8'))
 
 
