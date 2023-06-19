@@ -39,16 +39,18 @@ class DlgMain(QDialog):
         self.hbox_layout.setContentsMargins(0, 0, 0, 0)
 
         self.btn_send = QPushButton(self)
-        # self.btnSend.move(360, 300)
-        # self.btnSend.resize(40, 40)
-        self.btn_send.clicked.connect(self.btnSend_clicked)
+        self.btn_send.clicked.connect(self.btn_send_clicked)
         self.btn_send.setIcon(QIcon('send-icon.png'))
 
         self.btn_additions = QPushButton(self)
-        # self.btnAdditions.move(360, 340)
-        # self.btnAdditions.resize(40, 40)
-        self.btn_additions.clicked.connect(self.btnAdditions_clicked)
+        self.btn_additions.clicked.connect(self.btn_additions_clicked)
         self.btn_additions.setIcon(QIcon('emoji-icon.png'))
+
+        self.btn_settings = QPushButton("Настройки", self)
+        self.btn_settings.clicked.connect(self.btn_settings_clicked)
+
+        self.btn_temp = QPushButton("новый чат", self)
+        self.btn_temp.clicked.connect(self.btn_temp_clicked)
 
         self.emoji_qwidget = QWidget(self)
         self.emoji_qwidget.setWindowFlags(Qt.Popup)
@@ -59,30 +61,16 @@ class DlgMain(QDialog):
         self.emoji_txt_browser.setText(self.emoji_to_html(self.emoji_list))
         self.emoji_txt_browser.setOpenLinks(False)
         self.emoji_txt_browser.anchorClicked.connect(self.emoji_link_clicked)
-
         # emoji_txt_browser.setHidden(True)
-
-        self.btn_temp = QPushButton("новый чат", self)
-        self.btn_temp.clicked.connect(self.btn_temp_method)
 
         self.hbox_layout.addWidget(self.btn_send)
         self.hbox_layout.addWidget(self.btn_additions)
+        self.hbox_layout.addWidget(self.btn_settings)
         self.hbox_layout.addWidget(self.btn_temp)
 
         self.vbox_main_layout.addLayout(self.hbox_layout)
 
 
-
-    def btn_temp_method(self):
-        tr1 = Thread(target=self.client_server)
-        tr1.start()
-
-
-
-        # self.tab_list[self.cur_tab].txt_browser.append(self.my_client.get_request_data())
-        # add_new_tab
-        # self.tab_list.append(Tab())
-        # self.tab_widget.addTab(self.tab_list[-1], "Tab " + str(len(self.tab_list) - 1))
 
     def client_server(self):
         self.s_clnt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -96,19 +84,34 @@ class DlgMain(QDialog):
             print(msg.decode('utf-8'))
 
 
-    def btnSend_clicked(self):
+    def btn_send_clicked(self):
         # self.hist_text = self.hist_text + '\n\n' + self.txtEdit.toPlainText()
         self.tab_list[self.cur_tab].txt_browser.append(emoji.emojize(self.tab_list[self.cur_tab].msg_as_txt))
         self.tab_list[self.cur_tab].txt_edit.clear()
         self.tab_list[self.cur_tab].txt_edit.setFocus()
 
-    def btnAdditions_clicked(self):
+    def btn_additions_clicked(self):
 
         # print(self.pos())
         # print(self.btn_additions.pos())
         self.emoji_qwidget.move(self.btn_additions.pos() + self.pos() + QPoint(0, 30))
         # print(self.emoji_qwidget.pos())
         self.emoji_qwidget.show()
+
+    def btn_settings_clicked(self):
+        pass
+
+    def btn_temp_clicked(self):
+        tr1 = Thread(target=self.client_server)
+        tr1.start()
+
+
+
+        # self.tab_list[self.cur_tab].txt_browser.append(self.my_client.get_request_data())
+        # add_new_tab
+        # self.tab_list.append(Tab())
+        # self.tab_widget.addTab(self.tab_list[-1], "Tab " + str(len(self.tab_list) - 1))
+
 
     def emoji_link_clicked(self, qurl):
 
