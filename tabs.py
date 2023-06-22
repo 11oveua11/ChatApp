@@ -32,7 +32,6 @@ class Tab(QWidget):
         self.splitter.setChildrenCollapsible(False)
         self.splitter.setSizes([300, ])
 
-
     def txt_edit_changed(self):
         self.msg_as_txt = self.txt_edit.toPlainText()
         cursor = self.txt_edit.textCursor()
