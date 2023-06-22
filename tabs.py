@@ -17,6 +17,8 @@ class Tab(QWidget):
 
         self.splitter.addWidget(self.txt_browser)
         self.splitter.addWidget(self.txt_edit)
+        # self.splitter.setContentsMargins(0, 0, 0, 0)
+        self.vbox_tab_layout.setContentsMargins(0, 0, 0, 0)
         self.vbox_tab_layout.addWidget(self.splitter)
 
         # self.txtBrowser.resize(100, 80)
@@ -29,7 +31,7 @@ class Tab(QWidget):
 
         self.splitter.setChildrenCollapsible(False)
         self.splitter.setSizes([300, ])
-        self.vbox_tab_layout.setContentsMargins(0, 0, 0, 0)
+
 
     def txt_edit_changed(self):
         self.msg_as_txt = self.txt_edit.toPlainText()

@@ -1,17 +1,33 @@
-import requests
 import socket
+from config import *
 
 class Client():
     
     def __int__(self):
+        pass
+
+
+    def get_request_data(self, *req_data):
         self.s_clnt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s_clnt.connect(('127.0.0.1', 1234))
-        while True:
+        self.s_clnt.connect((conf['server'], conf['port']))
+        req_key = req_data[0]
+        match req_key:
+            case 'new_user':
+                self.s_clnt.send(bytes(' '.join(req_data), 'utf-8'))
+                self.full_msg = ""
+                while True:
+                    msg = self.s_clnt.recv(1024)
+                    if len(msg) <= 0:
+                        break
+                    self.full_msg += msg.decode('utf-8')
+                return self.full_msg
 
-            self.s_clnt.send(bytes('main_data', 'utf-8'))
-            msg = self.s_clnt.recv(1024)
-            print(msg.decode('utf-8'))
+            case 'test':
+                self.s_clnt.send(bytes('test', 'utf-8'))
+                self.full_msg = True
+                while True and self.full_msg:
+                    self.full_msg = self.s_clnt.recv(1024)
+                return self.full_msg
 
-    def get_request_data(self):
-        return requests.get('main_data')
-
+            case _:
+                return "неизвестный запрос"
