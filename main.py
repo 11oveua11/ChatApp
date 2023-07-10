@@ -8,6 +8,7 @@ from config import *
 import client
 import socket
 from threading import Thread
+from time import sleep
 
 class DlgMain(QDialog):
 
@@ -21,8 +22,8 @@ class DlgMain(QDialog):
         self.setWindowIcon(QIcon('icon.png'))
 
         self.server = ''
-        self.port = None
-        self.load_btn_clicked()
+        self.port = ''
+
 
 
         # self.message = AdvMessage()
@@ -101,11 +102,11 @@ class DlgMain(QDialog):
         self.group_podkluchenie.setGeometry(10, 10, 380, 50)
         self.hbox_podkluchenie = QHBoxLayout(self.settings_widget)
         self.group_podkluchenie.setLayout(self.hbox_podkluchenie)
-        self.set_server = QLineEdit(self.group_podkluchenie)
+        self.set_server = QLineEdit(self)
         # self.set_server.setSizePolicy(QSizePolicy.setHorizontalStretch(stretchFactor=2))
         self.set_server.resize(80, 20)
         self.set_server.setPlaceholderText("сервер")
-        self.set_port = QLineEdit(self.group_podkluchenie)
+        self.set_port = QLineEdit(self)
         # self.set_port.setSizePolicy(QSizePolicy.setHorizontalStretch(stretchFactor=1))
         self.set_port.resize(30, 20)
         self.set_port.setPlaceholderText("порт")
@@ -126,18 +127,26 @@ class DlgMain(QDialog):
         self.set_login = QLineEdit(self.group_reg)
         # self.set_server.setSizePolicy(QSizePolicy.setHorizontalStretch(stretchFactor=2))
         self.set_login.resize(80, 20)
-        self.set_login.setPlaceholderText("сервер")
+        self.set_login.setPlaceholderText("login")
         self.set_pass = QLineEdit(self.group_reg)
         # self.set_port.setSizePolicy(QSizePolicy.setHorizontalStretch(stretchFactor=1))
         self.set_pass.resize(30, 20)
-        self.set_pass.setPlaceholderText("порт")
+        self.set_pass.setPlaceholderText("pass")
         # self.set_port.setWindowFlag(Qt.)
-        self.set_reg_button = QPushButton("TEST", self.settings_widget)
+        self.set_gender_comb = QComboBox(self.group_reg)
+        self.set_gender_comb.setPlaceholderText('gender')
+        self.set_gender_comb.addItems(["Unknown", "Man", "Woman"])
+
+        # self.set_gender = QLineEdit(self.group_reg)
+        # self.set_gender.setPlaceholderText("gender")
+
+        self.set_reg_button = QPushButton("REG", self.settings_widget)
         self.set_reg_button.clicked.connect(self.set_reg_button_click)
         self.hbox_reg.setContentsMargins(4, 0, 4, 0)
         self.hbox_reg.minimumSize()
         self.hbox_reg.addWidget(self.set_login)
         self.hbox_reg.addWidget(self.set_pass)
+        self.hbox_reg.addWidget(self.set_gender_comb)
         self.hbox_reg.addWidget(self.set_reg_button)
 
         self.group_buttons = QGroupBox(self.settings_widget)
@@ -163,9 +172,8 @@ class DlgMain(QDialog):
         self.vbox_settings.addWidget(self.group_buttons)
 
 
+        self.load_btn_clicked()
 
-
-        self.settings_widget.show()
 
     # def client_server(self, arg):
     #     self.cl = client.Client()
@@ -188,20 +196,16 @@ class DlgMain(QDialog):
 
     def btn_settings_clicked(self):
         # self.settings_widget.setWindowFlags(Qt.Popup)
+
         self.settings_widget.show()
 
     def btn_temp_clicked(self):
         pass
-        tr1 = Thread(target=self.thread_client_server)
-        tr1.start()
-
-
 
         # self.tab_list[self.cur_tab].txt_browser.append(self.my_client.get_request_data())
         # add_new_tab
         # self.tab_list.append(Tab())
         # self.tab_widget.addTab(self.tab_list[-1], "Tab " + str(len(self.tab_list) - 1))
-
 
     def emoji_link_clicked(self, qurl):
 
@@ -210,8 +214,6 @@ class DlgMain(QDialog):
         self.tab_list[self.cur_tab].msg_as_txt = self.tab_list[self.cur_tab].txt_edit.toPlainText() + self.emoji_list[int(qurl.toString())]
         self.tab_list[self.cur_tab].txt_edit.setText(emoji.emojize(self.tab_list[self.cur_tab].msg_as_txt))
         self.tab_list[self.cur_tab].txt_edit.setFocus()
-
-
 
     def send_message (self, msg_param):
         pass
@@ -234,26 +236,45 @@ class DlgMain(QDialog):
         return '''<body style="font-size: 16pt;">''' + main_txt + '''</body>'''
 
     def set_test_button_click(self):
-        answer = self.cl.get_request_data('test')
-        if answer.decode('utf-8') == 'True':
+        self.server = self.set_server.text()
+        self.port = self.set_port.text()
+
+        self.to_thread_function('test')
+        sleep(1)
+        if self.answer == 'test_passed':
             self.set_test_button.setStyleSheet('QPushButton {background-color: #00C100}')
             self.set_test_button.setText('+WORKS+')
-
-    def thread_client_server(self):
-        cl = client.Client()
-        ans = cl.get_request_data('new_user', 'Jim', 'q1w2e3r4', '1')
-        print(ans)
-
-    def thread_function(self):
-        pass
-
+        else:
+            self.set_test_button.setStyleSheet('QPushButton {background-color: #C10000}')
+            self.set_test_button.setText('-FALSE-')
 
     def set_reg_button_click(self):
-        pass
+        self.to_thread_function('new_user', self.set_login.text(), self.set_pass.text(), str(self.set_gender_comb.currentIndex()))
+        sleep(1)
+        if self.answer == 'user_created':
+            self.set_reg_button.setStyleSheet('QPushButton {background-color: #00C100}')
+            self.set_reg_button.setText('+CREATED+')
+        elif self.answer == 'user_exists':
+            self.set_reg_button.setStyleSheet('QPushButton {background-color: #C10000}')
+            self.set_reg_button.setText('-EXISTS-')
+        else:
+            print("unknown answer")
+
+    def to_thread_function(self, *args):
+        tr1 = Thread(target=self.thread_client_server, args=args)
+        tr1.start()
+        return self.answer
+
+    def thread_client_server(self, *args):
+        cl = client.Client()
+        self.answer = cl.get_request_data(*args, server=self.server, port=self.port)
+        print(self.answer)
 
     def load_btn_clicked(self):
         self.server = conf['server']
+        self.set_server.setText(self.server)
         self.port = conf['port']
+        self.set_port.setText(str(self.port))
 
     def save_btn_clicked(self):
         pass
